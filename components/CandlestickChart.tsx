@@ -5,44 +5,47 @@ import { getCandlestickConfig, getChartConfig, LIVE_INTERVAL_BUTTONS,
   PERIOD_BUTTONS, PERIOD_CONFIG } from '@/constants';
 import { CandlestickSeries, createChart, IChartApi, ISeriesApi } from 'lightweight-charts';
 
-import { fetcher } from '@/lib/coingecko.actions';
 import { convertOHLCData } from '@/lib/utils';
 
+
+
 const CandlestickChart = ({
-  children,
-  data,
-  coinId,
-  height = 360,
-  initialPeriod = 'daily',
-  liveOhlcv = null,
-  mode = 'historical',
-  liveInterval,
-  setLiveInterval,
+  children, data, coinId, height = 360, initialPeriod = 'daily',
+  liveOhlcv = null, mode = 'historical', liveInterval, setLiveInterval,
 }: CandlestickChartProps) => {
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const candleSeriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null);
   const prevOhlcDataLength = useRef<number>(data?.length || 0);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const [period, setPeriod] = useState(initialPeriod);
   const [ohlcData, setOhlcData] = useState<OHLCData[]>(data ?? []);
   const [isPending, startTransition] = useTransition();
 
   const fetchOHLCData = async (selectedPeriod: Period) => {
-    try {
-      const { days, interval } = PERIOD_CONFIG[selectedPeriod];
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
-      const newData = await fetcher<OHLCData[]>(`/coins/${coinId}/ohlc`, {
-        vs_currency: 'usd',
-        days,
-        interval,
-        precision: 'full',
+    try {
+      const { days } = PERIOD_CONFIG[selectedPeriod];
+
+      const response = await fetch(`/api/coins/${coinId}/ohlc?days=${days}`, {
+        signal: controller.signal,
       });
+
+      if (!response.ok) {
+        throw new Error(`Unable to fetch OHLC data: ${response.status}`);
+      }
+
+      const newData: OHLCData[] = await response.json();
 
       startTransition(() => {
         setOhlcData(newData ?? []);
       });
-    } catch (e) {
+    } catch (e: unknown) {
+      if (e instanceof Error && e.name === 'AbortError') return;
       console.error('Failed to fetch OHLCData', e);
     }
   };

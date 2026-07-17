@@ -61,13 +61,6 @@ interface CoinDetailsData {
   tickers: Ticker[];
 }
 
-type OHLCData = [number, number, number, number, number];
-
-interface NextPageProps {
-  params: Promise<{ [key: string]: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
-
 interface CandlestickChartProps {
   data?: OHLCData[];
   liveOhlcv?: OHLCData | null;
@@ -76,9 +69,44 @@ interface CandlestickChartProps {
   children?: React.ReactNode;
   mode?: 'historical' | 'live';
   initialPeriod?: Period;
-  liveInterval: '1s' | '1m';
-  setLiveInterval: (interval: '1s' | '1m') => void;
+  liveInterval?: '1s' | '1m';
+  setLiveInterval?: (interval: '1s' | '1m') => void;
 }
+
+interface TrendingCoin {
+  item: {
+    id: string;
+    name: string;
+    symbol: string;
+    market_cap_rank: number;
+    thumb: string;
+    large: string;
+    data: {
+      price: number;
+      price_change_percentage_24h: {
+        usd: number;
+      };
+    };
+  };
+}
+
+interface CoinGeckoErrorBody {
+  error?: string;
+}
+
+type Period = 'daily' | 'weekly' | 'monthly' | '3months' | '6months' | 'yearly' | 'max';
+
+type OHLCData = [number, number, number, number, number];
+
+
+type QueryParams = Record<string, string | number | boolean | undefined>;
+
+
+interface NextPageProps {
+  params: Promise<{ [key: string]: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
 
 interface ConverterProps {
   symbol: string;
@@ -99,7 +127,7 @@ interface Ticker {
   trade_url: string;
 }
 
-type Period = 'daily' | 'weekly' | 'monthly' | '3months' | '6months' | 'yearly' | 'max';
+
 
 interface CoinMarketData {
   id: string;
@@ -129,22 +157,6 @@ interface CoinMarketData {
   last_updated: string;
 }
 
-interface TrendingCoin {
-  item: {
-    id: string;
-    name: string;
-    symbol: string;
-    market_cap_rank: number;
-    thumb: string;
-    large: string;
-    data: {
-      price: number;
-      price_change_percentage_24h: {
-        usd: number;
-      };
-    };
-  };
-}
 
 interface SearchCoin {
   id: string;
@@ -307,11 +319,6 @@ interface SearchItemProps {
   isActiveName: boolean;
 }
 
-interface CoinGeckoErrorBody {
-  error?: string;
-}
-
-type QueryParams = Record<string, string | number | boolean | undefined>;
 
 interface PoolData {
   id: string;

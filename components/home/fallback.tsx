@@ -113,3 +113,78 @@ export const CategoriesFallback = () => {
     </div>
   );
 };
+
+
+export const CoinsFallback = () => {
+  const columns = [
+    {
+      header: 'Rank',
+      cellClassName: 'rank-cell',
+      cell: () => <div className="rank-line skeleton" />,
+    },
+    {
+      header: 'Token',
+      cellClassName: 'token-cell',
+      cell: () => (
+        <div className="token-info">
+          <div className="token-image skeleton" />
+          <div className="token-line skeleton" />
+        </div>
+      ),
+    },
+    {
+      header: 'Price',
+      cellClassName: 'price-cell',
+      cell: () => <div className="price-line skeleton" />,
+    },
+    {
+      header: '24h Change',
+      cellClassName: 'change-cell',
+      cell: () => (
+        <div className="change-cell">
+          <div className="change-icon skeleton" />
+          <div className="change-line skeleton" />
+        </div>
+      ),
+    },
+    {
+      header: 'Market Cap',
+      cellClassName: 'market-cap-cell',
+      cell: () => <div className="value-skeleton-lg skeleton" />,
+    },
+  ];
+
+  const dummyData = Array.from({ length: 10 }, (_, i) => ({ id: i }));
+
+  return (
+    <main id="coins-page-fallback">
+      <div className="content">
+        <h4>All Coins</h4>
+        <DataTable
+          tableClassName="coins-table"
+          data={dummyData}
+          columns={columns}
+          rowKey={(item) => item.id}
+        />
+
+        <div id="coins-pagination" className="pagination-fallback">
+          <div className="pagination-content">
+            <div className="pagination-control prev">
+              <div className="control-button skeleton" />
+            </div>
+
+            <div className="pagination-pages">
+              {Array.from({ length: 5 }, (_, i) => (
+                <div key={i} className="page-link skeleton" />
+              ))}
+            </div>
+
+            <div className="pagination-control next">
+              <div className="control-button skeleton" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+};
