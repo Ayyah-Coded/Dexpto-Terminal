@@ -571,7 +571,7 @@ NEXT_PUBLIC_COINGECKO_API_KEY=your_api_key
 ### 1. Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Ayyah-Coded/Dexpto-Terminal
 cd Dexpto-Terminal
 ```
 
