@@ -161,7 +161,7 @@ sequenceDiagram
 
 <p align="center">
   <img src="./public/assets/coin-overview.png" width="48%" alt="Coin Overview"/>
-  <img src="./publicassets/top-categories.png" width="48%" alt="Top Categories"/>
+  <img src="./public/assets/top-categories.png" width="48%" alt="Top Categories"/>
 </p>
 
 <p align="center">
