@@ -12,17 +12,38 @@ import Converter from '@/components/Converter';
 const Page = async ({ params }: NextPageProps) => {
   const { id } = await params;
 
-  const [coinData, coinOHLCData] = await Promise.all([
-    fetcher<CoinDetailsData>(`/coins/${id}`, {
-      dex_pair_format: 'contract_address',
-    }),
-    fetcher<OHLCData[]>(`/coins/${id}/ohlc`, {
-      vs_currency: 'usd',
-      days: 1,
-      interval: 'hourly',
-      precision: 'full',
-    }),
-  ]);
+  let coinData: CoinDetailsData;
+  let coinOHLCData: OHLCData[];
+
+  try {
+    [coinData, coinOHLCData] = await Promise.all([
+      fetcher<CoinDetailsData>(`/coins/${id}`, {
+        dex_pair_format: 'contract_address',
+      }),
+      fetcher<OHLCData[]>(`/coins/${id}/ohlc`, {
+        vs_currency: 'usd',
+        days: 1,
+        interval: 'hourly',
+        precision: 'full',
+      }),
+    ]);
+  } catch (error) {
+    console.error(`Failed to fetch coin details for ${id}:`, error);
+
+    return (
+      <main className="mx-auto flex min-h-100 max-w-360 items-center justify-center px-4 sm:px-6">
+        <div className="max-w-md rounded-lg bg-dark-500 p-6 text-center">
+          <h1 className="text-xl font-semibold">Coin data is temporarily unavailable</h1>
+          <p className="mt-2 text-purple-100">
+            CoinGecko is rate-limiting requests. Please try again in a minute.
+          </p>
+          <Link className="mt-5 inline-block text-green-500 hover:underline" href="/coins">
+            Back to all coins
+          </Link>
+        </div>
+      </main>
+    );
+  }
 
   const platform = coinData.asset_platform_id
     ? coinData.detail_platforms?.[coinData.asset_platform_id]

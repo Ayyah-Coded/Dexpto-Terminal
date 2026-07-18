@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { SearchModal } from "@/components/SearchModal";
 
 
 function Header() {
@@ -14,7 +15,7 @@ function Header() {
     <header>
       <div className="main-container inner">
         <Link href="/">
-          <Image src="/assets/logo.svg" alt="Dexpto logo" width={132} height={40}/>
+          <Image src="/assets/logo.svg" alt="Dexpto logo" width={40} height={40}/>
         </Link>
 
         <nav>
@@ -28,7 +29,7 @@ function Header() {
             Home
           </Link>
 
-          <p>Search Modal</p>
+          <SearchModal />
           
           <Link 
             href="/coins"
